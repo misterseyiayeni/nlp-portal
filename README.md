@@ -2,7 +2,7 @@
 
 #### Description
 
-NLP Portal is a cloud-native Generative Artificial Intelligence (AI) NLP solution built entirely on Amazon Web Services (AWS)!
+NLP Portal is a cloud-native Generative Artificial Intelligence (AI) NAtural Language (NLP) solution built entirely on Amazon Web Services (AWS)!
 In today's data-rich world, the ability to understand and process language at scale is a true game-changer.
 
 This solution is designed to transform unstructured text — from customer support tickets, product reviews, articles,
@@ -154,7 +154,7 @@ AWS Service: AWS Identity and Access Management (IAM)
 #### Deployment Steps
 
 **THINGS TO NOTE**
-**SOME OF THESE STEPS DIFFER ON THE AWS CURRENT WEB INTERFACE**
+**SOME OF THESE STEPS DIFFER IN ORDER, ARRANGEMENT, OR PRECEDENCE ON THE CURRENT AWS WEB INTERFACE**
 **REPLACE VARIABLES ENCLOSED IN '<>' WITH THE ACTUAL VALUE**
 
 ##### Phase 1: Prerequisites & Local Setup
@@ -204,18 +204,21 @@ docker images
 
 You should see nlp-portal in your list of local Docker images.
 
+![Docker](screenshots/docker.png)
 
 Local Test: Run the container locally in your terminal with:
 
 docker run -p 8000:8000 \
   -v ~/.aws:/root/.aws:ro \
-  -e AWS_REGION=INSERT_YOUR_REGION_HERE \
-  -e DYNAMODB_TABLE=INSERT_YOUR_DB_TABLE_NAME_HERE \
+  -e AWS_REGION=<AWS_REGION> \
+  -e DYNAMODB_TABLE=<DYNAMODB_TABLE> \
   nlp-portal
 
 Open your browser to http://localhost:8000. You should see {"status":"ok","message":"GenAI NLP API is running"}. Stop the container with Ctrl+C.
 
-Test locally by entering the followinf
+![Browser Test](screenshots/alb-test-1.png)
+
+Test locally by entering the followinG:
 
 ```
 curl http://localhost:8000/
@@ -223,38 +226,15 @@ curl http://localhost:8000/
 ```
 curl -X POST http://localhost:8000/translate \
   -H "Content-Type: application/json" \
-  -d '{"text": "In the quiet of the evening, the gentle hum of life carries reflections of the past and dreams of the future.", "target_language": "Japanese"}'
+  -d '{"text": "The sun is shining", "target_language": "Spanish"}'
 ```
 ```
 curl -X POST http://localhost:8000/translate \
   -H "Content-Type: application/json" \
-  -d '{"text": "In the quiet of the evening, the gentle hum of life carries reflections of the past and dreams of the future.", "target_language": "Chinese"}'
+  -d '{"text": "The sun is shining", "target_language": "German"}'
 ```
-```
-curl -X POST http://localhost:8000/sentiment \
-  -H "Content-Type: application/json" \
-  -d '{"text": "I feel extremely frustrated with the delays in the service."}'
-```
-```
-curl -X POST http://localhost:8000/chat \
-  -H "Content-Type: application/json" \
-  -d '{"prompt": "Tell me something rarely known about marine life"}'
-```
-```
-curl -X POST http://localhost:8000/chat \
-  -H "Content-Type: application/json" \
-  -d '{"prompt": "Tell me something rarely known about space"}'
-```
-```
-curl -X POST http://localhost:8000/ner \
-  -H "Content-Type: application/json" \
-  -d '{"text": "In 2021, Apple Inc. unveiled the new iPhone 13 in Cupertino, California, while Microsoft, headquartered in Redmond, Washington, announced major updates to Windows 11. At the same time, Google in Mountain View, California, introduced new advancements in AI, and Tesla, led by Elon Musk, continued expanding its Gigafactories in Berlin and Shanghai. Additionally, Amazon, headquartered in Seattle, Washington, launched a series of innovative devices in partnership with Samsung and LG from South Korea. The annual tech summit in New York City brought together leaders from IBM, Oracle, and Facebook, emphasizing cross-industry collaboration."}'
-```
-```
-curl -X POST http://localhost:8000/summarize \
-  -H "Content-Type: application/json" \
-  -d '{"text": "Climate change significantly impacts global ecosystems and weather patterns. Urgent measures are needed, including adopting renewable energy and sustainable practices, to mitigate these effects while governments and communities collaborate."}'
-```
+![Terminal Tests](screenshots/confirmation-1.png)
+
 
 ##### Foundational AWS Infrastructure
 
@@ -289,6 +269,7 @@ docker tag nlp-portal:latest <ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/nlp
 ```
 docker push <ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/nlp-portal:latest
 ```
+![ECR](screenshots/ecr.png)
 
 **Create DynamoDB Table**
 
@@ -334,6 +315,9 @@ Verification:
 
 - In the ECR console, you should see your genai-api image with a latest tag.
 - In the DynamoDB console, your translation_log table should have a status of Active.
+
+![DynamoDB](screenshots/dynamodb-1.png)
+
 - In the IAM console, your FargateGenAIRole should exist and have the two required policies attached.
 
 ##### Deployment via ECS "Create Service" Wizard or CLI
@@ -354,6 +338,8 @@ aws ecs create-cluster --cluster-name nlp-portal-cluster-internal --capacity-pro
 - In the left navigation pane, click Clusters, then "Create cluster".
 - Cluster name: nlp-portal-cluster.
 - Infrastructure: Select AWS Fargate (serverless). Click Create.
+
+![ECS](screenshots/ecs.png)
 
 Once the cluster is created, go to the Services tab and click "Create".
 
@@ -399,6 +385,9 @@ IPv4 CIDR block:
 - In the left-hand navigation pane of the VPC console, click on "Your VPCs". You should see your new genai-vpc.
 - Click on "Subnets". You will see the four subnets that were automatically created (2 public, 2 private).
 - Click on "NAT Gateways". You will see the two NAT gateways that were created.
+
+![VPC Config](screenshots/vpc-info.png)
+![NAT Gateway](screenshots/nat-gateway.png)
 
 **Load balancer**
 - Select "Create a new Application Load Balancer".
@@ -457,10 +446,14 @@ Instructions:
 - After several minutes, the service deployment should complete successfully.
 - Go to the Tasks tab within your service. You should see one task with a status of RUNNING.
 
+![ECS Service Config](screenshots/ecs-cluster-config.png)
+
 ***ENSURE THAT THE SUBNETS THE ALB IS CREATED IN ARE PUBLIC AND DIRECT TRAFFIC TO THE IGW***
 
 Navigate to EC2 -> Load Balancers. You will find the newly created ALB. Copy its DNS name.
 
+![ALB](screenshots/alb.png)
+![ALB AZ config](screenshots/alb-az-config.png)
 **Ensure that security groups for the ALB and ECS have been created accordingly to accept traffic from the client application.**
 
 For ALB:
@@ -478,63 +471,52 @@ For the ECS Tasks:
 
 - Use a tool like Postman or the curl command in your terminal.
 
-Send a POST request to the ALB's DNS name at the /translate endpoint.
+Send a POST request to the ALB's DNS name at the each endpoint.
 
 *Terminal*
 ```
 curl http://<ALB_DNS_NAME>.<AWS_REGION>.elb.amazonaws.com/
 ```
 *Web*
-```
+
 http://<ALB_DNS_NAME>.<AWS_REGION>.elb.amazonaws.com/
-```
-```
-curl -X POST http://<ALB_DNS_NAME>.<AWS_REGION>elb.amazonaws.com/translate \
--H "Content-Type: application/json" \
--d '{"text": "In the soft glow of the setting sun, the world seems to pause, inviting us to embrace a moment of quiet wonder. Every gentle breeze carries whispers of hope and promise, reminding us that beauty can be found even in the simplest of things. Let your heart be light—open to the magic of a new day and the infinite possibilities that lie ahead"}'
-```
 
-Now, test the endpoints:
+![ALB Test](screenshots/alb-test-1.png)
 
 ```
-curl http://<ALB_DNS_NAME>.<AWS_REGION>.elb.amazonaws.com/
+curl -X POST https://<ALB_DNS_NAME>.<AWS_REGION>.amazonaws.com/dev/translate \
+  -H "Content-Type: application/json" \
+  -d '{"text": "In the quiet of the evening, the gentle hum of life carries reflections of the past and dreams of the future.", "target_language": "Japanese"}'
 ```
 ```
 curl -X POST https://<ALB_DNS_NAME>.<AWS_REGION>.amazonaws.com/dev/translate \
   -H "Content-Type: application/json" \
-  -d '{"text": "Moonlight weaves silver threads through ancient ruins, whispering secrets to the stars about forgotten civilizations.", "target_language": "Japanese"}'
-```
-```
-curl -X POST https://<ALB_DNS_NAME>.<AWS_REGION>.amazonaws.com/dev/translate \
-  -H "Content-Type: application/json" \
-  -d '{"text": "Moonlight weaves silver threads through ancient ruins, whispering secrets to the stars about forgotten civilizations.", "target_language": "Spanish"}'
+  -d '{"text": "In the quiet of the evening, the gentle hum of life carries reflections of the past and dreams of the future.", "target_language": "Chinese"}'
 ```
 ```
 curl -X POST https://<ALB_DNS_NAME>.<AWS_REGION>.amazonaws.com/dev/sentiment \
   -H "Content-Type: application/json" \
-  -d '{"text": "The customer service was really nice and my stay was memorable. 5 stars!"}'
+  -d '{"text": "I feel extremely frustrated with the delays in the service."}'
 ```
 ```
 curl -X POST https://<ALB_DNS_NAME>.<AWS_REGION>.amazonaws.com/dev/chat \
   -H "Content-Type: application/json" \
-  -d '{"prompt": "What are the top 10 paintings ever known?"}'
+  -d '{"prompt": "Tell me something rarely known about marine life"}'
 ```
 ```
-curl -X POST https://<ALB_DNS_NAME>.<AWS_REGION>.amazonaws.com/dev/ner \
+curl -X POST https://<ALB_DNS_NAME>.<AWS_REGION>.amazonaws.com/dev/chat \
   -H "Content-Type: application/json" \
-  -d '{"text": "The Nobel Prizes, awarded in Stockholm, Sweden for most categories and in Oslo, Norway for the Peace Prize, honor groundbreaking achievements across fields. Laureates such as Albert Einstein and Marie Curie revolutionized physics and chemistry with their innovative works, while figures like Malala Yousafzai and Barack Obama have been celebrated for their commitment to peace. Prestigious institutions like the University of Cambridge and the Karolinska Institute have nurtured the research that leads to these honorific awards. Detailed biographies of these winners reveal a rich tapestry of perseverance, transformative scientific discoveries, and literary masterpieces that continue to influence global progress."}'
+  -d '{"prompt": "Tell me something rarely known about space"}'
 ```
 ```
-curl -X POST https://<ALB_DNS_NAME>.<AWS_REGION>.amazonaws.com/dev/ner \
+curl -X POST https://<ALB_DNS_NAME>.<AWS_REGION>.amazonaws.com/ner \
   -H "Content-Type: application/json" \
   -d '{"text": "In 2021, Apple Inc. unveiled the new iPhone 13 in Cupertino, California, while Microsoft, headquartered in Redmond, Washington, announced major updates to Windows 11. At the same time, Google in Mountain View, California, introduced new advancements in AI, and Tesla, led by Elon Musk, continued expanding its Gigafactories in Berlin and Shanghai. Additionally, Amazon, headquartered in Seattle, Washington, launched a series of innovative devices in partnership with Samsung and LG from South Korea. The annual tech summit in New York City brought together leaders from IBM, Oracle, and Facebook, emphasizing cross-industry collaboration."}'
 ```
 ```
-curl -X POST https://<ALB_DNS_NAME>.<AWS_REGION>.amazonaws.com/dev/summarize \
+curl -X POST https://<ALB_DNS_NAME>.<AWS_REGION>.amazonaws.com/summarize \
   -H "Content-Type: application/json" \
-  -d '{
-  "text": "The rapid advancements in interdisciplinary research have necessitated the development of novel methodologies to synthesize extensive academic literature. Recent innovations in bibliometric analysis, machine learning techniques, and qualitative meta-synthesis are increasingly used to distill complex theoretical frameworks into concise, actionable insights. However, challenges persist in ensuring reproducibility, transparency, and critical assessment across diverse disciplines. This emerging trend underscores the importance of integrating computational tools with traditional scholarly methods to enhance the efficiency and rigor of academic inquiry."
-}'
+  -d '{"text": "Climate change significantly impacts global ecosystems and weather patterns. Urgent measures are needed, including adopting renewable energy and sustainable practices, to mitigate these effects while governments and communities collaborate."}'
 ```
 
 **Verification**
@@ -542,6 +524,20 @@ curl -X POST https://<ALB_DNS_NAME>.<AWS_REGION>.amazonaws.com/dev/summarize \
 - API Response: You should receive the relevant response:
 - DynamoDB Record: Navigate to the DynamoDB console, select the translation_log table, and click "Explore table items". You should see a new record corresponding to the request you just sent.
 You have now successfully deployed the entire solution. The optional next step would be to connect this ALB to an API Gateway for added security and custom domains, as described in our architecture.
+
+![ALB Test 2](screenshots/alb-test-2.png)
+![ALB Test 3](screenshots/alb-test-3.png)
+
+![Pm ALB Test 1](screenshots/pm-alb-test-1.png)
+![Pm ALB Test 2](screenshots/pm-alb-test-2.png)
+![Pm ALB Test 3](screenshots/pm-alb-test-3.png)
+![Pm ALB Test 4](screenshots/pm-alb-test-4.png)
+![Pm ALB Test 5](screenshots/pm-alb-test-5.png)
+![Pm ALB Test 6](screenshots/pm-alb-test-6.png)
+
+![Dynamo DB Screenshot 3](screenshots/dynamodb-3.png)
+![Dynamo DB Screenshot 4](screenshots/dynamodb-4.png)
+![Dynamo DB Screenshot 5](screenshots/dynamodb-5.png)
 
 **Set Up Amazon API Gateway**
 
@@ -576,5 +572,12 @@ curl -X POST https://<API_INVOKE_URL>.<AWS_REGION>.amazonaws.com/<STAGE_NAME>tra
   ```
 
 - Monitor Logs: Check API Gateway logs (if enabled) and CloudWatch to verify that requests are received and forwarded correctly.
+
+![Pm API Gateway Test 1](screenshots/pm-apigw-test-1.png)
+![Pm API Gateway Test 2](screenshots/pm-apigw-test-2.png)
+![Pm API Gateway Test 3](screenshots/pm-apigw-test-3.png)
+![Pm API Gateway Test 4](screenshots/pm-apigw-test-4.png)
+![Pm API Gateway Test 5](screenshots/pm-apigw-test-5.png)
+![Pm API Gateway Test 6](screenshots/pm-apigw-test-6.png)
 
 **There is also need to restrict access to the ALB to accept traffic only from the API Gateway.**
