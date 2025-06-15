@@ -8,6 +8,16 @@ In today's data-rich world, the ability to understand and process language at sc
 This solution is designed to transform unstructured text — from customer support tickets, product reviews, articles,
 document repositories, and various other sources — into actionable intelligence, operational improvement, and revenue boost.
 
+
+**Problem Statement**
+
+Inefficiencies hampering an organization's global operations related to processing high volumes of text data, including:
+
+- High Customer Support Costs: Significant overhead dedicated to handling multilingual support tickets and routing basic, repetitive questions to human agents.
+- Delayed Market Insights: Inability to rapidly analyze thousands of global product reviews and social media comments, leading to slow response to market trends and product quality issues.
+
+**Service Offerings**
+
 The platform provides a suite of modular, API-driven services, namely:
 
 - Text-to-text language translation
