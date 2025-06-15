@@ -32,7 +32,7 @@ A user calls any of the endpoint routes with relevant payload from a client over
 The payload is received and sent to the appropriate API endpoint route, processed, saved in the db,
 and the resulting response returned to the client.
 
-The solution was built according to the following principles:
+The solution has been built according to the following principles:
 
 - Managed services
 - Elasticity of demand (auto-scaling)
