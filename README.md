@@ -25,22 +25,29 @@ and the resulting response returned to the client.
 The solution was built according to the following principles:
 
 - Managed services
-- Containterization (to ensure portability, consistency, and modularity)
-- Elasticty of demand (auto-scaling)
+- Elasticity of demand (auto-scaling)
 - Least privilege principle (role/privilege/permission)
+- Containerization (to ensure portability, consistency, and modularity)
+
+Architecturally, the goal was a resilient, scalable, and secure solution with the following layers:
+
+- Compute: A containerized Python app on #AWSFargate for serverless, elastic scaling.
+- AI Engine: Powered by #AmazonBedrock, providing access to state-of-the-art foundation models.
+- API Layer: Secured and managed by #APIGateway, with traffic distributed by an Application Load Balancer.
+- High Availability: Deployed across multiple Availability Zones with a locked-down VPC.
 
 Tech/Infrastructure Stack
 
 - Python
 - Docker
-- Amazon Elastic Container Registry (ECR)
-- Amazon Application Programming Interface (API) Gateway
-- Application Load Balancer (ALB)
 - AWS Fargate
-- Network Address Translation (NAT) Gateway
 - Amazon Bedrock
 - Amazon DynamoDB
 - Amazon CloudWatch
+- Application Load Balancer (ALB)
+- Amazon Elastic Container Registry (ECR)
+- Network Address Translation (NAT) Gateway
+- Amazon Application Programming Interface (API) Gateway
 
 #### Solution Architecture
 
@@ -218,7 +225,7 @@ Open your browser to http://localhost:8000. You should see {"status":"ok","messa
 
 ![Browser Test](screenshots/alb-test-1.png)
 
-Test locally by entering the followinG:
+Test locally by entering the following:
 
 ```
 curl http://localhost:8000/
