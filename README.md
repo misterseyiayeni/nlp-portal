@@ -2,7 +2,7 @@
 
 #### Description
 
-NLP Portal is a cloud-native Generative Artificial Intelligence (AI) NAtural Language (NLP) solution built entirely on Amazon Web Services (AWS)!
+NLP Portal is a cloud-native Generative Artificial Intelligence (AI) Natural Language (NLP) solution built entirely on Amazon Web Services (AWS)!
 In today's data-rich world, the ability to understand and process language at scale is a true game-changer.
 
 This solution is designed as a platform to transform unstructured text — from customer support tickets, product reviews, articles,
