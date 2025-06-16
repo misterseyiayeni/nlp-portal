@@ -70,6 +70,7 @@ Tech/Infrastructure Stack
 
 - Python
 - Docker
+- AWS IAM
 - AWS Fargate
 - Amazon Bedrock
 - Amazon DynamoDB
