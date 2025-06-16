@@ -70,13 +70,13 @@ Tech/Infrastructure Stack
 
 - Python
 - Docker
-- AWS IAM
 - AWS Fargate
 - Amazon Bedrock
 - Amazon DynamoDB
 - Amazon CloudWatch
 - Application Load Balancer (ALB)
 - Amazon Elastic Container Registry (ECR)
+- AWS Identity and Access Management (IAM)
 - Network Address Translation (NAT) Gateway
 - Amazon Application Programming Interface (API) Gateway
 
