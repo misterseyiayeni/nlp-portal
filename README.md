@@ -80,7 +80,7 @@ Tech/Infrastructure Stack
 - Network Address Translation (NAT) Gateway
 - Amazon Application Programming Interface (API) Gateway
 
-#### Solution Architecture
+## Solution Architecture
 
 ![Solution Architecture](nlp-portal-arch.png)
 
