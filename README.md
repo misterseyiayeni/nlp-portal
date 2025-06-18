@@ -1,6 +1,6 @@
-### Natural Language Processing (NLP) Portal
+# Natural Language Processing (NLP) Portal
 
-#### Description
+## Description
 
 NLP Portal is a cloud-native Generative Artificial Intelligence (AI) Natural Language (NLP) solution built entirely on Amazon Web Services (AWS)!
 In today's data-rich world, the ability to understand and process language at scale is a true game-changer.
@@ -9,14 +9,14 @@ This solution is designed as a platform to transform unstructured text — from 
 document repositories, and various other sources — into actionable intelligence, operational improvement, and revenue boost.
 
 
-#### Problem Statement
+## Problem Statement
 
 Inefficiencies hampering an organization's global operations related to processing high volumes of text data, including:
 
 - High Customer Support Costs: Significant overhead dedicated to handling multilingual support tickets and routing basic, repetitive questions to human agents.
 - Delayed Market Insights: Inability to rapidly analyze thousands of global product reviews and social media comments, leading to slow response to market trends and product quality issues.
 
-#### Business Benefits & Value Proposition
+## Business Benefits & Value Proposition
 
 - Operational Efficiency & Cost Reduction:
     - Automation of translation of support tickets, reducing reliance on specialized services.
@@ -36,7 +36,7 @@ Inefficiencies hampering an organization's global operations related to processi
     - The containerized, serverless architecture ensures we only pay for what we use and can handle any future traffic load.
     - The modular design allows for the easy addition of new NLP capabilities in the future with minimal rework.
 
-#### Service Offerings
+## Service Offerings
 
 The platform provides a suite of modular, API-driven services, namely:
 
@@ -46,7 +46,7 @@ The platform provides a suite of modular, API-driven services, namely:
 - Named entity recognition
 - Text summarization
 
-#### Workflow:
+## Workflow:
 
 A user calls any of the endpoint routes with relevant payload from a client over the internet.
 The payload is received and sent to the appropriate API endpoint route, processed, saved in the db,
@@ -84,7 +84,7 @@ Tech/Infrastructure Stack
 
 ![Solution Architecture](nlp-portal-arch.png)
 
-#### Solution Architecture Stage Analysis
+## Solution Architecture Stage Analysis
 
 Here is the step-by-step flow with the corresponding action:
 
@@ -130,11 +130,11 @@ Dotted lines:
  - From: Docker -> To: Amazon ECR (container image push from Docker repo to Amazon ECR repo)
  - From: Amazon ECR -> To: AWS Fargate (container image pull by Fargate from Amazon ECR)
 
-#### Detailed Solution Architecture Justification
+## Detailed Solution Architecture Justification
 
 This architecture is designed as a cloud-native, serverless, and container-based system to provide a scalable and maintainable platform for Generative AI NLP modules.
 
-##### API Management & Security
+### API Management & Security
 
 AWS Service: Amazon API Gateway
 - Role in Architecture: Serves as the single, secure entry point ("front door") for all incoming client requests from the internet. It validates, authenticates, and routes requests to the appropriate backend service.
@@ -143,7 +143,7 @@ AWS Service: Amazon API Gateway
     - Elasticity of Demand: It automatically scales to handle virtually any volume of incoming API calls, from one to hundreds of thousands per second. You do not need to pre-provision capacity; it scales with your usage.
     - Least Privilege Principle: It acts as the first layer of defense. By configuring authorization methods (like API Keys or IAM authorization), you ensure that only authenticated and authorized clients can access the backend, enforcing a key aspect of security at the edge.
 
- ##### Traffic Distribution
+ ### Traffic Distribution
 
 AWS Service: Application Load Balancer (ALB)
 - Role in Architecture: It receives traffic from the API Gateway and intelligently distributes it across the multiple running instances of your application container.
@@ -151,7 +151,7 @@ AWS Service: Application Load Balancer (ALB)
     - Managed Service: The ALB is a managed load balancer. AWS handles its maintenance, availability, and scaling.
     - Elasticity of Demand: This is the core component enabling compute elasticity. As your Fargate service scales out by adding more containers, the ALB automatically registers these new targets and begins routing traffic to them. When Fargate scales in, the ALB removes the terminated targets. This seamless integration is crucial for auto-scaling.
 
-##### Core Application Compute
+### Core Application Compute
 AWS Services: AWS Fargate on Amazon ECS and Amazon Elastic Container Registry (ECR)
 - Role in Architecture:
     - ECR: Stores your packaged application as a Docker container image.
@@ -162,13 +162,13 @@ AWS Services: AWS Fargate on Amazon ECS and Amazon Elastic Container Registry (E
     - Elasticity of Demand: Fargate can be configured to automatically scale the number of running containers based on real-time metrics like CPU utilization or the number of incoming requests. This ensures you have just the right amount of compute power to meet demand without over-provisioning or experiencing performance degradation.
     - Modularity: The container-based approach allows you to package all five NLP functions into one modular, deployable unit, or split them into separate microservices later if needed.
 
-##### AI & NLP Processing
+### AI & NLP Processing
 AWS Service: Amazon Bedrock
 - Role in Architecture: The AI "brain" of your solution. It provides simple API access to a variety of powerful foundation models to perform the actual NLP tasks (translation, summarization, etc.).
 - Justification & Principle Alignment:
 - Managed Service: Bedrock is the quintessential managed AI service. It entirely abstracts away the immense complexity of hosting, scaling, and maintaining large language models. This dramatically accelerates development and reduces long-term operational costs.
 
-##### Data Persistence & Observability
+### Data Persistence & Observability
 AWS Services: Amazon DynamoDB and Amazon CloudWatch
 - Role in Architecture:
     - DynamoDB: A NoSQL database used to log each transaction (e.g., storing the request, the response, and a timestamp).
@@ -178,7 +178,7 @@ AWS Services: Amazon DynamoDB and Amazon CloudWatch
     - Managed Service: Both DynamoDB and CloudWatch are fully managed, serverless services. You do not manage database servers or logging infrastructure.
     - Elasticity of Demand: DynamoDB scales its read/write throughput seamlessly as your request volume grows. CloudWatch scales to ingest and process vast amounts of log and metric data without any manual intervention. They perfectly match the elastic nature of the compute layer.
 
-##### Overarching Principle: Security & Identity
+### Overarching Principle: Security & Identity
 AWS Service: AWS Identity and Access Management (IAM)
 - Role in Architecture: IAM is not a single stage but a foundational service that underpins the entire architecture's security. It provides the roles and permissions that allow services to communicate with each other.
 - Justification & Principle Alignment:
@@ -189,13 +189,13 @@ AWS Service: AWS Identity and Access Management (IAM)
     - The role has no permission to access any other AWS service (like S3) or any other DynamoDB table, strictly limiting its access and minimizing the potential impact of any compromise.
 
 
-#### Deployment Steps
+## Deployment Steps
 
 **THINGS TO NOTE**
 **SOME OF THESE STEPS DIFFER IN ORDER, ARRANGEMENT, OR PRECEDENCE ON THE CURRENT AWS WEB INTERFACE**
 **REPLACE VARIABLES ENCLOSED IN '<>' WITH THE ACTUAL VALUE**
 
-##### Phase 1: Prerequisites & Local Setup
+### Phase 1: Prerequisites & Local Setup
 
 This phase ensures your local machine is ready for development and deployment.
 
@@ -218,7 +218,7 @@ Verification:
 - Run docker --version. You should see the Docker version information.
 - Run python3 --version. You should see your Python version.
 
-##### Phase 2: Application Preparation & Containerization
+### Phase 2: Application Preparation & Containerization
 
 Goal: Create a FastAPI application and package it into a Docker container.
 
@@ -274,7 +274,7 @@ curl -X POST http://localhost:8000/translate \
 ![Terminal Tests](screenshots/confirmation-1.png)
 
 
-##### Foundational AWS Infrastructure
+### Foundational AWS Infrastructure
 
 Goal: Create the ECR repository to store your image, the DynamoDB table for logging, and the IAM role for permissions.
 
@@ -357,7 +357,7 @@ Verification:
 
 - In the IAM console, your FargateGenAIRole should exist and have the two required policies attached.
 
-##### Deployment via ECS "Create Service" Wizard or CLI
+### Deployment via ECS "Create Service" Wizard or CLI
 
 Goal: Create the networking (VPC, Subnets, ALB) and deploy the container as a scalable service using a streamlined wizard.
 
@@ -576,7 +576,7 @@ You have now successfully deployed the entire solution. The optional next step w
 ![Dynamo DB Screenshot 4](screenshots/dynamodb-4.png)
 ![Dynamo DB Screenshot 5](screenshots/dynamodb-5.png)
 
-##### Setup of Amazon API Gateway**
+### Setup of Amazon API Gateway**
 
 1. Create an HTTP API in API Gateway
 - Sign in to the AWS Console: Navigate to Amazon API Gateway.
@@ -617,7 +617,7 @@ curl -X POST https://<API_INVOKE_URL>.<AWS_REGION>.amazonaws.com/<STAGE_NAME>tra
 ![Pm API Gateway Test 5](screenshots/pm-apigw-test-5.png)
 ![Pm API Gateway Test 6](screenshots/pm-apigw-test-6.png)
 
-##### Future Enhancements
+### Future Enhancements
 
 - Use evaluation techniques such as LLM-as-a-judge or ensemble judging – use of multiple LLM judges or multiple prompts for robustness - to feed the output of a model into another
 - Utilize data stored in DynamoDB to kickstart secondary upstream processes in the future (retraining of models)
