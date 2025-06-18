@@ -621,4 +621,5 @@ curl -X POST https://<API_INVOKE_URL>.<AWS_REGION>.amazonaws.com/<STAGE_NAME>tra
 
 - Use evaluation techniques such as LLM-as-a-judge or ensemble judging – use of multiple LLM judges or multiple prompts for robustness - to feed the output of a model into another
 - Utilize data stored in DynamoDB to kickstart secondary upstream processes in the future (retraining of models)
+- Containerization at service route level (placing each function into containers of their own for total independence and future scaling)
 - Chaining of models such that the best one for the task at hand is selected based on a reliable logic
