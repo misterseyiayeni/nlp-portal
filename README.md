@@ -52,7 +52,7 @@ A user calls any of the endpoint routes with relevant payload from a client over
 The payload is received and sent to the appropriate API endpoint route, processed, saved in the db,
 and the resulting response returned to the client.
 
-The solution has been built according to the following principles:
+The solution is designed and built according to the following principles:
 
 - Managed services
 - Elasticity of demand (auto-scaling)
@@ -324,7 +324,6 @@ docker push <ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/nlp-portal:latest
 - On the permissions page, click "Create policy" in a new browser tab.
 - Select the JSON tab and paste the following policy. This grants the specific permissions needed.
 
-JSON
 
 {
     "Version": "2012-10-17",
@@ -577,7 +576,7 @@ You have now successfully deployed the entire solution. The optional next step w
 ![Dynamo DB Screenshot 4](screenshots/dynamodb-4.png)
 ![Dynamo DB Screenshot 5](screenshots/dynamodb-5.png)
 
-**Set Up Amazon API Gateway**
+##### Setup of Amazon API Gateway**
 
 1. Create an HTTP API in API Gateway
 - Sign in to the AWS Console: Navigate to Amazon API Gateway.
@@ -618,4 +617,8 @@ curl -X POST https://<API_INVOKE_URL>.<AWS_REGION>.amazonaws.com/<STAGE_NAME>tra
 ![Pm API Gateway Test 5](screenshots/pm-apigw-test-5.png)
 ![Pm API Gateway Test 6](screenshots/pm-apigw-test-6.png)
 
-**There is also need to restrict access to the ALB to accept traffic only from the API Gateway.**
+##### Future Enhancements
+
+- Use evaluation techniques such as LLM-as-a-judge or ensemble judging – use of multiple LLM judges or multiple prompts for robustness - to feed the output of a model into another
+- Utilize data stored in DynamoDB to kickstart secondary upstream processes in the future (retraining of models)
+- Chaining of models such that the best one for the task at hand is selected based on a reliable logic
